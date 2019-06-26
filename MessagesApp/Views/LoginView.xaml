@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="MessagesApp.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:MessagesApp.Views"
+             mc:Ignorable="d"
+             Style="{StaticResource BasicStyle}">
+    
+    <Grid>
+        <materialDesign:Card Style="{StaticResource CardDefaultStyle}">
+            <StackPanel Margin="32"
+                        HorizontalAlignment="Left">
+                <TextBox Text="{Binding FirstName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource FloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Login" />
+                <TextBox Text="{Binding LastName}"
+                         Style="{StaticResource FloatingHintTextBox}" />
+                <TextBox Text="{Binding Email}"
+                         Style="{StaticResource FloatingHintTextBox}" />
+                <Button Content="{Binding IsValid, UpdateSourceTrigger=PropertyChanged}"
+                        IsEnabled="True" />
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>
