@@ -23,6 +23,13 @@
                 <TextBox Text="{Binding Length}"
                          Width="200"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+
+                <Slider Width="200"
+                        Margin="0 16"
+                        TickFrequency="2"
+                        Style="{StaticResource MaterialDesignDiscreteSlider}"
+                        Value="50" />
+                
                 <Button Content="Update"
                         Width="150"
                         Margin="0 20"

@@ -1,4 +1,5 @@
 ﻿using MessagesApp.Commands;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MessagesApp.ViewModels
 {
-    public class NavigationViewModel : ViewModelBase
+    public class NavigationViewModel : BindableBase
     {
         MainViewModel mainViewModel;
 

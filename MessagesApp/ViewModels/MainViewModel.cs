@@ -1,5 +1,6 @@
 ﻿using MessagesApp.Commands;
 using MessagesApp.Views;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +11,8 @@ using System.Windows.Media;
 
 namespace MessagesApp.ViewModels
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : BindableBase
     {
-        //private object selectedViewModel;
-        
-        private string text;
-
         public MainViewModel()
         {
             Navigation = new NavigationViewModel(this);
@@ -28,37 +25,19 @@ namespace MessagesApp.ViewModels
         }
         
         public NavigationViewModel Navigation { get; set; }
-
-        private ViewModelBase contentView;
-        //public ViewModelBase ContentView
-        //{
-        //    get => contentView;
-        //    set => SetProperty(ref contentView, value);
-        //}
-        public ViewModelBase ContentView
+        
+        private BindableBase contentView;
+        public BindableBase ContentView
         {
-            get
-            {
-                return contentView;
-            }
-            set
-            {
-                contentView = value;
-                OnPropertyChanged("ContentView");
-            }
+            get => contentView;
+            set => SetProperty(ref contentView, value);
         }
 
+        private string text;
         public string Text
         {
-            get
-            {
-                return text;
-            }
-            set
-            {
-                text = value;
-                OnPropertyChanged("Text");
-            }
+            get => text;
+            set => SetProperty(ref text, value);
         }
     }
 }

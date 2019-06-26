@@ -1,4 +1,5 @@
 ﻿using MessagesApp.Commands;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,68 +9,91 @@ using System.Threading.Tasks;
 
 namespace MessagesApp.ViewModels
 {
-    class RegisterViewModel : ViewModelBase
+    class RegisterViewModel : BindableBase
     {
-        private string password;
-        private string passwdCrypt;
-        private string hash;
-        private string length;
-
         public RegisterViewModel()
         {
             Update = new RelayCommand(Calc);
         }
 
+        //public string Password
+        //{
+        //    get
+        //    {
+        //        return password;
+        //    }
+        //    set
+        //    {
+        //        password = value;
+        //        OnPropertyChanged("Password");
+        //    }
+        //}
+
+        //public string PasswdCrypt
+        //{
+        //    get
+        //    {
+        //        return passwdCrypt;
+        //    }
+        //    set
+        //    {
+        //        passwdCrypt = value;
+        //        OnPropertyChanged("PasswdCrypt");
+        //    }
+        //}
+
+        //public string Hash
+        //{
+        //    get
+        //    {
+        //        return hash;
+        //    }
+        //    set
+        //    {
+        //        hash = value;
+        //        OnPropertyChanged("Hash");
+        //    }
+        //}
+
+        //public string Length
+        //{
+        //    get
+        //    {
+        //        return length;
+        //    }
+        //    set
+        //    {
+        //        length = value;
+        //        OnPropertyChanged("Length");
+        //    }
+        //}
+
+        private string password;
         public string Password
         {
-            get
-            {
-                return password;
-            }
-            set
-            {
-                password = value;
-                OnPropertyChanged("Password");
-            }
+            get => password;
+            set => SetProperty(ref password, value);
         }
 
+        private string passwdCrypt;
         public string PasswdCrypt
         {
-            get
-            {
-                return passwdCrypt;
-            }
-            set
-            {
-                passwdCrypt = value;
-                OnPropertyChanged("PasswdCrypt");
-            }
+            get => passwdCrypt;
+            set => SetProperty(ref passwdCrypt, value);
         }
 
+        private string hash;
         public string Hash
         {
-            get
-            {
-                return hash;
-            }
-            set
-            {
-                hash = value;
-                OnPropertyChanged("Hash");
-            }
+            get => hash;
+            set => SetProperty(ref hash, value);
         }
 
+        private string length;
         public string Length
         {
-            get
-            {
-                return length;
-            }
-            set
-            {
-                length = value;
-                OnPropertyChanged("Length");
-            }
+            get => length;
+            set => SetProperty(ref length, value);
         }
 
         public RelayCommand Update { get; set; }

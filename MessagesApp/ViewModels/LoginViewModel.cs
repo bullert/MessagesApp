@@ -48,38 +48,16 @@ namespace MessagesApp.ViewModels
                 RaisePropertyChanged();
             }
         }
-
-        //public string FirstName
-        //{
-        //    get => user.FirstName;
-        //    set
-        //    {
-        //        user.FirstName = value;
-        //        OnPropertyChanged("FirstName");
-        //        ValidationCheck(null);
-        //    }
-        //}
-
-        //public string LastName
-        //{
-        //    get => user.LastName;
-        //    set
-        //    {
-        //        user.LastName = value;
-        //        OnPropertyChanged("LastName");
-        //        ValidationCheck(null);
-        //    }
-        //}
-
-        //public string Email
-        //{
-        //    get => user.Email;
-        //    set
-        //    {
-        //        var email = user.Email;
-        //        if (SetProperty(ref email, value)) { user.Email = email; }
-        //    }
-        //}
+        
+        public string Email
+        {
+            get => user.Email;
+            set
+            {
+                user.Email = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private bool isValid;
         public bool IsValid
