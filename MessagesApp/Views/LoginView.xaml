@@ -4,24 +4,80 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:main="clr-namespace:MessagesApp"
              xmlns:local="clr-namespace:MessagesApp.Views"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              mc:Ignorable="d"
              Style="{StaticResource BasicStyle}">
-    
+
+    <!--xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"-->
     <Grid>
         <materialDesign:Card Style="{StaticResource CardDefaultStyle}">
             <StackPanel Margin="32"
                         HorizontalAlignment="Left">
-                <TextBox Text="{Binding FirstName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+
+                <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
                          Style="{StaticResource FloatingHintTextBox}"
-                         materialDesign:HintAssist.Hint="Login" />
-                <TextBox Text="{Binding LastName}"
-                         Style="{StaticResource FloatingHintTextBox}" />
-                <TextBox Text="{Binding Email}"
-                         Style="{StaticResource FloatingHintTextBox}" />
-                <Button Content="{Binding IsValid, UpdateSourceTrigger=PropertyChanged}"
-                        IsEnabled="True" />
+                         materialDesign:HintAssist.Hint="First Name"
+                         Margin="10">
+                    <Validation.ErrorTemplate>
+                        <ControlTemplate>
+                            <StackPanel Visibility="Visible">
+                                <AdornedElementPlaceholder />
+                                <ItemsControl ItemsSource="{Binding}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding ErrorContent}"
+                                                       Foreground="Red"
+                                                       FontSize="11"
+                                                       Margin="0 2"
+                                                       HorizontalAlignment="Right" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Validation.ErrorTemplate>
+                </TextBox>
+
+                <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True}"
+                         Style="{StaticResource FloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="First Name" />
+                <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}"
+                         Style="{StaticResource FloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Last Name" />
+                <!--<TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True, Mode=TwoWay}"
+                         Style="{StaticResource FloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Email" />-->
+                <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}"
+                         Style="{StaticResource FloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Email">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding ValidationCheckCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <!--<Button Content="{Binding ValidationCheckCommand, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                        IsEnabled="{Binding IsValid, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                        Command="{x:Static materialDesign:Transitioner.MoveNextCommand}"/>-->
+                <Button Margin="8 32"
+                        Width="180"
+                        Content="Sign In"
+                        Foreground="{StaticResource PrimaryHueDarkForegroundBrush}"
+                        Command="{Binding ValidationCheckCommand}" />
+                
+                <!--<Label Content="Send Email">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:LaunchUriOrFileAction Path="mailto:bartekbullert@gmail.com" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Label>-->
+                
             </StackPanel>
         </materialDesign:Card>
     </Grid>
+    
 </UserControl>

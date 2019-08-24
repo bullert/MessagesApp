@@ -17,8 +17,8 @@ namespace MessagesApp.ViewModels
         {
             Navigation = new NavigationViewModel(this);
 
-            var br0 = Application.Current.FindResource("MaterialDesignBody") as SolidColorBrush;
-            var br1 = Application.Current.FindResource("MaterialDesignCardBackground") as SolidColorBrush;
+            var br0 = Application.Current.FindResource("MaterialDesignCheckBoxDisabled") as SolidColorBrush;
+            var br1 = Application.Current.FindResource("MaterialDesignBodyLight") as SolidColorBrush;
             var br2 = Application.Current.FindResource("MaterialDesignPaper") as SolidColorBrush;
 
             Text = br0.ToString() + br1.ToString() + br2.ToString();

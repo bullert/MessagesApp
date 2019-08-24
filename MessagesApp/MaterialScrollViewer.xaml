@@ -1,0 +1,180 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:MessagesApp"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <Color x:Key="ScrollBarTrackColor">transparent</Color>
+    <Color x:Key="ScrollBarTrackOnHoverColor">#eeeeee</Color>
+
+    <Color x:Key="ScrollBarThumbColor">#bdbdbd</Color>
+    <Color x:Key="ScrollBarThumbOnHoverColor">#757575</Color>
+
+    <SolidColorBrush x:Key="ScrollBarTrackBrush"
+                     Color="{StaticResource ScrollBarTrackColor}" />
+    <SolidColorBrush x:Key="ScrollBarThumbBrush"
+                     Color="{StaticResource ScrollBarThumbColor}" />
+    
+    <sys:Double x:Key="ScrollBarWidth">16</sys:Double>
+    <sys:Double x:Key="ScrollBarTrackWidth">5</sys:Double>
+    <CornerRadius x:Key="ScrollBarTrackCornerRadius">2.5</CornerRadius>
+
+    <Thickness x:Key="SBM">0 5</Thickness>
+
+    <Style x:Key="PlainListViewStyle"
+           TargetType="ListView">
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListView">
+                    <ScrollViewer>
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ScrollBarThumbStyle"
+           TargetType="{x:Type Thumb}">
+        <Setter Property="Background"
+                Value="{StaticResource ScrollBarThumbBrush}" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Border Background="Transparent">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}"
+                                    Width="{StaticResource ScrollBarTrackWidth}"
+                                    CornerRadius="{StaticResource ScrollBarTrackCornerRadius}" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation To="{StaticResource ScrollBarThumbOnHoverColor}"
+                                        Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
+                                        FillBehavior="HoldEnd"
+                                        Duration="0:0:0.2" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation To="{StaticResource ScrollBarThumbColor}"
+                                        Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
+                                        FillBehavior="HoldEnd"
+                                        Duration="0:0:0.2" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+    
+    <ControlTemplate x:Key="ScrollBarThumb"
+                     TargetType="{x:Type ScrollBar}" >
+        <Grid>
+            <Border Background="{TemplateBinding Background}"
+                    Width="{StaticResource ScrollBarTrackWidth}"
+                    CornerRadius="{StaticResource ScrollBarTrackCornerRadius}" />
+            <Track Name="PART_Track"
+                   IsDirectionReversed="True">
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource ScrollBarThumbStyle}" />
+                </Track.Thumb>
+            </Track>
+        </Grid>
+    </ControlTemplate>
+
+    <Style x:Key="VerticalScrollBarStyle"
+           TargetType="{x:Type ScrollBar}">
+        <Setter Property="Background"
+                Value="{StaticResource ScrollBarTrackBrush}" />
+        <Style.Triggers>
+            <Trigger Property="Orientation"
+                     Value="Vertical">
+                <Setter Property="HorizontalAlignment"
+                        Value="Right" />
+                <Setter Property="Width"
+                        Value="{StaticResource ScrollBarWidth}" />
+                <Setter Property="Template"
+                        Value="{StaticResource ScrollBarThumb}" />
+            </Trigger>
+            <EventTrigger RoutedEvent="MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation To="{StaticResource ScrollBarTrackOnHoverColor}"
+                                        Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
+                                        FillBehavior="HoldEnd"
+                                        Duration="0:0:0.2" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation To="{StaticResource ScrollBarTrackColor}"
+                                        Storyboard.TargetProperty="(Background).(SolidColorBrush.Color)"
+                                        FillBehavior="HoldEnd"
+                                        Duration="0:0:0.2" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="MaterialScrollViewer"
+           TargetType="{x:Type ScrollViewer}">
+        <Setter Property="LayoutTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleY="-1" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid>
+                        <!--<ScrollContentPresenter />-->
+                        <ScrollContentPresenter>
+                            <!--<ScrollContentPresenter.LayoutTransform>
+                                <ScaleTransform ScaleY="-1" />
+                            </ScrollContentPresenter.LayoutTransform>-->
+                        </ScrollContentPresenter>
+                        <ScrollBar Name="PART_VerticalScrollBar"
+                                   Margin="{DynamicResource SBM}"
+                                   Style="{StaticResource VerticalScrollBarStyle}"
+                                   Value="{TemplateBinding VerticalOffset}"
+                                   Maximum="{TemplateBinding ScrollableHeight}"
+                                   ViewportSize="{TemplateBinding ViewportHeight}"
+                                   >
+                            <!--<ScrollBar.LayoutTransform>
+                                <ScaleTransform ScaleY="-1" />
+                            </ScrollBar.LayoutTransform>-->
+                        </ScrollBar>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

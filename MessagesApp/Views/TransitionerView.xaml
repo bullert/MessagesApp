@@ -1,0 +1,206 @@
+﻿<UserControl x:Class="MessagesApp.Views.TransitionerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:MessagesApp.Views"
+             xmlns:controls="clr-namespace:MessagesApp"
+             xmlns:vm="clr-namespace:MessagesApp.ViewModels"
+             xmlns:views="clr-namespace:MessagesApp.Views"
+             mc:Ignorable="d"
+             Style="{StaticResource BasicStyle}">
+
+    <UserControl.Resources>
+        <!--<Thickness x:Key="SBM">0 8 0 -88</Thickness>-->
+        <Thickness x:Key="SBM">0 8 0 8</Thickness>
+
+        <Style x:Key="PlainListViewStyle"
+               TargetType="ListView">
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListView">
+                        <ScrollViewer>
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <DataTemplate x:Key="MessageTemplate">
+            <TextBlock Text="{Binding Text}"
+                       Background="Red"
+                       Margin="10">
+            </TextBlock>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:MessageViewModel}">
+            <views:MessageView x:Name="MessageView" />
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <Grid>
+
+        <Rectangle>
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0 1"
+                                     EndPoint="1 0">
+                    <GradientStop Color="#E5E5E9"
+                                  Offset="0" />
+                    <GradientStop Color="#FFFFFF"
+                                  Offset=".9" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <Border Width="720"
+                Background="White"
+                Style="{StaticResource CardStyle}">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <!--<ScrollViewer Grid.Row="0"
+                              ScrollViewer.ScrollChanged="ScrollViewer_ScrollChanged"
+                              controls:Attr.ScrollToBottomOnChange="{Binding OnScrollToBottom, UpdateSourceTrigger=PropertyChanged}"
+                              Style="{StaticResource MaterialScrollViewer}"
+                              Panel.ZIndex="1">-->
+
+                <ScrollViewer Grid.Row="0"
+                              controls:Attr.ArrowUpPressedOnChange="{Binding ArrowUp}"
+                              controls:Attr.ArrowDownPressedOnChange="{Binding ArrowDown}"
+                              controls:Attr.MouseWheelUpOnChange="{Binding MouseWheelUp}"
+                              controls:Attr.MouseWheelDownOnChange="{Binding MouseWheelDown}"
+                              controls:Attr.VerticalOffset="{Binding VerticalOffset, UpdateSourceTrigger=PropertyChanged}"
+                              controls:Attr.ScrollToBottomValueOnChange="{Binding ScrollToOffsetValue, UpdateSourceTrigger=PropertyChanged}"
+                              controls:Attr.ScrollToOffsetOnChange="{Binding OnScrollToOffset, UpdateSourceTrigger=PropertyChanged}"
+                              controls:Attr.ScrollToBottomOnChange="{Binding OnScrollToBottom, UpdateSourceTrigger=PropertyChanged}"
+                              Style="{StaticResource MaterialScrollViewer}"
+                              Panel.ZIndex="1">
+
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="ScrollChanged">
+                            <behaviors:InvokeCommandAction Command="{Binding ScrollCmd}" />
+                        </behaviors:EventTrigger>
+                        <!--<behaviors:EventTrigger EventName="PreviewMouseWheel">
+                            <behaviors:InvokeCommandAction Command="{Binding ScrollCmd2}" />
+                        </behaviors:EventTrigger>-->
+                    </behaviors:Interaction.Triggers>
+
+                    <ScrollViewer.InputBindings>
+                        <MouseBinding Command="{Binding MouseWheelUpCmd}">
+                            <MouseBinding.Gesture>
+                                <vm:MouseWheelUp />
+                            </MouseBinding.Gesture>
+                        </MouseBinding>
+                        <MouseBinding Command="{Binding MouseWheelDownCmd}">
+                            <MouseBinding.Gesture>
+                                <vm:MouseWheelDown />
+                            </MouseBinding.Gesture>
+                        </MouseBinding>
+
+                        <KeyBinding Gesture="Down"
+                                    Command="{Binding ArrowDownPressedCmd}" />
+                        <KeyBinding Gesture="Up"
+                                    Command="{Binding ArrowUpPressedCmd}" />
+                    </ScrollViewer.InputBindings>
+                    
+                    <!--ItemTemplate="{StaticResource MessageTemplate}">-->
+
+                    <ListView Style="{StaticResource PlainListBoxStyle}"
+                              controls:Attr.VerticalOffset2="{Binding VerticalOffset2}"
+                              ItemsSource="{Binding Conversation.Messages}"
+                              Focusable="False">
+                        <ListView.LayoutTransform>
+                            <ScaleTransform ScaleY="-1" />
+                        </ListView.LayoutTransform>
+                        <!--<ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ContentControl Content="{Binding MessageViewModel}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>-->
+
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="SizeChanged">
+                                <behaviors:InvokeCommandAction Command="{Binding SizeChangedCmd}" />
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+
+                    </ListView>
+                </ScrollViewer>
+
+                <!--<Separator Grid.Row="1"
+                           Background="#eee" Margin="32 0" />-->
+
+                <StackPanel Grid.Row="1">
+                    <Button Content="Prepend"
+                            Command="{Binding PrependMessageCmd}" />
+                    <TextBlock Text="{Binding VerticalOffset, UpdateSourceTrigger=PropertyChanged}" />
+                    <!--<TextBlock Text="{Binding VerticalOffset2, UpdateSourceTrigger=PropertyChanged}" />-->
+                    <TextBlock Text="{Binding VerticalOffset2, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Text="{Binding ScrollToOffsetValue, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2"
+                            FocusManager.FocusedElement="{Binding ElementName=MessageBox}"
+                            Background="#444">
+                    <Border Style="{StaticResource MaterialRoundedTextBox}"
+                            Background="White"
+                            Margin="46 32 46 32">
+                        <Grid>
+
+                            <Button Command="{Binding SendMessageCmd}"
+                                    Style="{StaticResource MaterialDesignToolButton}"
+                                    Margin="4 0"
+                                    HorizontalAlignment="Right"
+                                    materialDesign:RippleAssist.IsCentered="True"
+                                    materialDesign:RippleAssist.RippleSizeMultiplier=".7">
+                                <StackPanel Width="16"
+                                            Height="16" />
+                            </Button>
+
+                            <materialDesign:PackIcon Kind="Send"
+                                                     Foreground="#777"
+                                                     Margin="6 0"
+                                                     HorizontalAlignment="Right"
+                                                     VerticalAlignment="Center"
+                                                     IsHitTestVisible="False" />
+
+                            <TextBox x:Name="MessageBox" Text="{Binding MessageContent, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="12 0 36 0"
+                                     materialDesign:HintAssist.Hint="Type something...">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Gesture="Enter"
+                                                Command="{Binding SendMessageCmd}" />
+                                </TextBox.InputBindings>
+                            </TextBox>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+            </Grid>
+
+        </Border>
+    </Grid>
+
+</UserControl>

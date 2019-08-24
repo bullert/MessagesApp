@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,13 +12,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MessagesApp.ViewModels;
 
-namespace MessagesApp
+namespace MessagesApp.Views
 {
-    public partial class MainWindow : Window
+    /// <summary>
+    /// Logika interakcji dla klasy MessageView.xaml
+    /// </summary>
+    public partial class MessageView : UserControl
     {
-        public MainWindow()
+        public MessageView()
         {
             InitializeComponent();
         }

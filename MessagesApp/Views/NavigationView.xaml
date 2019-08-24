@@ -1,21 +1,21 @@
 ﻿<UserControl x:Class="MessagesApp.Views.NavigationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:MessagesApp.Views"
              xmlns:viewmodels="clr-namespace:MessagesApp.ViewModels"
              mc:Ignorable="d"
              Style="{StaticResource BasicStyle}">
-    
+
     <Grid>
-        <materialDesign:ColorZone Padding="16"
-                                  Mode="PrimaryMid"
+        <materialDesign:ColorZone Mode="PrimaryDark"
                                   materialDesign:ShadowAssist.ShadowDepth="Depth2">
             <DockPanel>
 
-                <materialDesign:PopupBox DockPanel.Dock="Right" 
+                <materialDesign:PopupBox DockPanel.Dock="Right"
+                                         Margin="16"
                                          PlacementMode="BottomAndAlignRightEdges"
                                          materialDesign:RippleAssist.RippleSizeMultiplier=".7">
 
@@ -29,15 +29,18 @@
                         <Separator />
                         <Button Content="Settings"
                                 Command="{Binding RelayCommand}"
-                                CommandParameter="4" />
+                                CommandParameter="-1" />
                         <Button Content="Close"
                                 Command="{Binding RelayCommand}"
                                 CommandParameter="0" />
+                        <Button Content="Open Dialog"
+                                Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}" />
                     </StackPanel>
-                    
+
                 </materialDesign:PopupBox>
 
-                <StackPanel Orientation="Horizontal" Margin="16 0">
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Bottom">
                     <RadioButton Style="{StaticResource MaterialDesignTabRadioButton}"
                                  Padding="16 0"
                                  Content="Main Page"
@@ -54,13 +57,28 @@
                                  Command="{Binding RelayCommand}"
                                  CommandParameter="3"
                                  Content="Sign Up" />
+                    <RadioButton Style="{StaticResource MaterialDesignTabRadioButton}"
+                                 Padding="16 0"
+                                 Command="{Binding RelayCommand}"
+                                 CommandParameter="4"
+                                 Content="Scrollbar" />
+                    <RadioButton Style="{StaticResource MaterialDesignTabRadioButton}"
+                                 Padding="16 0"
+                                 Command="{Binding RelayCommand}"
+                                 CommandParameter="5"
+                                 Content="Conversation" />
+                    <RadioButton Style="{StaticResource MaterialDesignTabRadioButton}"
+                                 Padding="16 0"
+                                 Command="{Binding RelayCommand}"
+                                 CommandParameter="6"
+                                 Content="Profile" />
                 </StackPanel>
-                
+
                 <!--<StackPanel Orientation="Horizontal">
                     <ToggleButton Style="{StaticResource MaterialDesignSwitchAccentToggleButton}"></ToggleButton>
                     <TextBlock Margin="16 0" VerticalAlignment="Center">fafasdf</TextBlock>
                 </StackPanel>-->
-                
+
             </DockPanel>
         </materialDesign:ColorZone>
     </Grid>

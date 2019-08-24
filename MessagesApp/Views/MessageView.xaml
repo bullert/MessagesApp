@@ -1,0 +1,537 @@
+﻿<UserControl x:Class="MessagesApp.Views.MessageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:vm="clr-namespace:MessagesApp.ViewModels"
+             xmlns:local="clr-namespace:MessagesApp.Views"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+
+        <SolidColorBrush x:Key="MessageBackgroundBrush"
+                         Color="#eee" />
+        <SolidColorBrush x:Key="MessageAuthorForegroundBrush"
+                         Color="#aaa" />
+        <SolidColorBrush x:Key="UserStatusOnlineBrush"
+                         Color="LightGreen" />
+        <SolidColorBrush x:Key="UserStatusOfflineBrush"
+                         Color="Transparent" />
+
+        <Style x:Key="StatusDiode"
+               TargetType="RadioButton">
+            <Setter Property="Background"
+                    Value="{StaticResource UserStatusOfflineBrush}" />
+            <Setter Property="Width"
+                    Value="6" />
+            <Setter Property="Height"
+                    Value="6" />
+            <Setter Property="IsEnabled"
+                    Value="False" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Left" />
+            <Setter Property="VerticalAlignment"
+                    Value="Top" />
+            <!--<Setter Property="Margin"
+                    Value="64 9" />-->
+            <Setter Property="Margin"
+                    Value="64 9.5" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Ellipse Fill="{TemplateBinding Background}"
+                                 Width="{TemplateBinding Width}"
+                                 Height="{TemplateBinding Height}" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked"
+                                     Value="True">
+                                <Setter Property="Background"
+                                        Value="{StaticResource UserStatusOnlineBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MessageTextBox"
+               BasedOn="{StaticResource MaterialDesignTextBox}"
+               TargetType="{x:Type TextBox}">
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="Margin"
+                    Value="12 4" />
+            <Setter Property="BorderThickness"
+                    Value="0" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+            <Setter Property="FontSize"
+                    Value="14" />
+            <Setter Property="TextWrapping"
+                    Value="Wrap" />
+            <Setter Property="IsReadOnly"
+                    Value="True" />
+            <Setter Property="materialDesign:TextFieldAssist.DecorationVisibility"
+                    Value="Hidden" />
+        </Style>
+
+        <Style x:Key="MessageContainer"
+               TargetType="{x:Type Border}">
+            <!--<Setter Property="Background"
+                    Value="#eee" />-->
+            <Setter Property="CornerRadius"
+                    Value="16" />
+            <Style.Resources>
+                <Style BasedOn="{StaticResource MessageTextBox}"
+                       TargetType="{x:Type TextBox}">
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <Style x:Key="LeftMessageTemplateStyle"
+               BasedOn="{StaticResource MessageContainer}"
+               TargetType="{x:Type Border}">
+            <Setter Property="Background"
+                    Value="#eee" />
+            <Setter Property="Margin"
+                    Value="64 24 128 8" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Left" />
+        </Style>
+
+        <Style x:Key="RightMessageTemplateStyle"
+               BasedOn="{StaticResource MessageContainer}"
+               TargetType="{x:Type Border}">
+            <Setter Property="Background"
+                    Value="#ffaa00" />
+            <Setter Property="Margin"
+                    Value="128 8 32 8" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Right" />
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBox}"
+                       BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Setter Property="Foreground"
+                            Value="#fff" />
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <Style x:Key="DateHeadlineTemplateStyle"
+               TargetType="{x:Type TextBlock}">
+            <!--<Setter Property="Background"
+                    Value="#eee" />-->
+            <Setter Property="Foreground"
+                    Value="#ccc" />
+            <Setter Property="FontSize"
+                    Value="12" />
+            <!--<Setter Property="FontWeight"
+                    Value="Medium" />-->
+            <Setter Property="Padding"
+                    Value="8" />
+            <Setter Property="TextAlignment"
+                    Value="Center" />
+        </Style>
+
+        <!--<ImageBrush x:Key="MessageProfilePictureImageBrush"
+                    ImageSource="{Binding Author.MessageProfilePictureUrl}" />-->
+
+        <Style x:Key="MessageProfilePictureButton"
+               TargetType="Button">
+            <Setter Property="Width"
+                    Value="32" />
+            <Setter Property="Height"
+                    Value="32" />
+            <Setter Property="Margin"
+                    Value="16 0 0 8" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Left" />
+            <Setter Property="VerticalAlignment"
+                    Value="Bottom" />
+            <Setter Property="Cursor"
+                    Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Grid Background="#eee">
+                                <materialDesign:PackIcon Kind="Person"
+                                                         Foreground="#bbb"
+                                                         Margin="0 5 0 -5"
+                                                         Width="32"
+                                                         Height="32">
+                                </materialDesign:PackIcon>
+                                <Grid.Clip>
+                                    <EllipseGeometry Center="16 16"
+                                                     RadiusX="16"
+                                                     RadiusY="16" />
+                                </Grid.Clip>
+                            </Grid>
+                            <Ellipse Width="32"
+                                     Height="32"
+                                     Fill="{TemplateBinding Background}" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MessageProfilePictureButton2"
+               TargetType="Button">
+            <Setter Property="Width"
+                    Value="32" />
+            <Setter Property="Height"
+                    Value="32" />
+            <Setter Property="Margin"
+                    Value="16 0 0 8" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Left" />
+            <Setter Property="VerticalAlignment"
+                    Value="Bottom" />
+            <Setter Property="Cursor"
+                    Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Ellipse Width="{TemplateBinding Width}"
+                                 Height="{TemplateBinding Height}"
+                                 Fill="{TemplateBinding Background}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--<Style x:Key="MessageAuthorNameHeadline"
+               TargetType="TextBlock">
+            <Setter Property="FontSize"
+                    Value="14" />
+            <Setter Property="Foreground"
+                    Value="#bbb" />
+            <Setter Property="Margin"
+                    Value="76 4" />
+        </Style>-->
+        <Style x:Key="MessageAuthorNameHeadline"
+               TargetType="TextBlock">
+            <Setter Property="FontSize"
+                    Value="14" />
+            <Setter Property="Foreground"
+                    Value="#bbb" />
+            <Setter Property="Margin"
+                    Value="76 4" />
+        </Style>
+
+        <Style TargetType="ToolTip"
+               BasedOn="{StaticResource {x:Type ToolTip}}">
+            <Setter Property="VerticalOffset"
+                    Value="-10" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToolTip">
+                        <Border Background="#000"
+                                Opacity=".8"
+                                CornerRadius="11">
+                            <TextBlock Foreground="#fff"
+                                       FontSize="11"
+                                       Margin="11 3 11 4">
+                                <ContentPresenter />
+                            </TextBlock>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="LeftMessageTemplate">
+            <StackPanel>
+                <Grid>
+                    <TextBlock Style="{StaticResource MessageAuthorNameHeadline}"
+                               Text="{Binding Author.FirstName, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <RadioButton IsChecked="{Binding Author.IsOnline, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{DynamicResource StatusDiode}" />
+
+                    <Button Style="{StaticResource MessageProfilePictureButton}"
+                            Command="{Binding Cmd}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="{Binding Author.MessageProfilePictureUrl}" />
+                        </Button.Background>
+                    </Button>
+
+                    <Border Style="{StaticResource LeftMessageTemplateStyle}"
+                            ToolTip="{Binding CreatedDate, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" />
+                    </Border>
+                </Grid>
+
+                <ContentControl Template="{DynamicResource WhoSeenTemplate}" />
+            </StackPanel>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="LeftTopMessageTemplate">
+            <StackPanel>
+                <Grid>
+                    <TextBlock Style="{StaticResource MessageAuthorNameHeadline}"
+                               Text="{Binding Author.FirstName, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <RadioButton IsChecked="{Binding Author.IsOnline, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{DynamicResource StatusDiode}" />
+
+                    <Border Style="{StaticResource LeftMessageTemplateStyle}"
+                            ToolTip="{Binding CreatedDate, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="64 24 128 1"
+                            CornerRadius="16 16 16 4">
+                        <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" />
+                    </Border>
+                </Grid>
+                
+                <Grid Background="Red" Height="20">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsFirst, UpdateSourceTrigger=PropertyChanged}"
+                                             Value="False">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                </Grid>
+            </StackPanel>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="LeftMiddleMessageTemplate">
+            <Grid>
+                <Border Style="{StaticResource LeftMessageTemplateStyle}"
+                        ToolTip="{Binding CreatedDate, UpdateSourceTrigger=PropertyChanged}"
+                        Margin="64 1 128 1"
+                        CornerRadius="4 16 16 4">
+                    <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" />
+                </Border>
+            </Grid>
+        </ControlTemplate>
+
+        <!--<Style x:Key="PlainListViewStyle2"
+               TargetType="ListView">
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <ContentPresenter HorizontalAlignment="Right" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListView">
+                        <ScrollViewer>
+                            <ItemsPresenter HorizontalAlignment="Right" />
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>-->
+
+        <ControlTemplate x:Key="LeftBottomMessageTemplate">
+            <StackPanel>
+                <Grid>
+                    <Button Style="{StaticResource MessageProfilePictureButton}"
+                            Command="{Binding Cmd}">
+                        <Button.Background>
+                            <ImageBrush ImageSource="{Binding Author.MessageProfilePictureUrl}" />
+                        </Button.Background>
+                    </Button>
+
+                    <Border Style="{StaticResource LeftMessageTemplateStyle}"
+                            ToolTip="{Binding CreatedDate, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="64 1 128 8"
+                            CornerRadius="4 16 16 16">
+                        <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" />
+                    </Border>
+                </Grid>
+
+                <ContentControl Template="{DynamicResource WhoSeenTemplate}" />
+            </StackPanel>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="WhoSeenTemplate">
+            <Grid Margin="0 -2 0 10">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLast, UpdateSourceTrigger=PropertyChanged}"
+                                         Value="False">
+                                <Setter Property="Visibility"
+                                        Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                
+                <ListView ItemsSource="{Binding SeenBy, UpdateSourceTrigger=PropertyChanged}"
+                          HorizontalAlignment="Right"
+                          FlowDirection="RightToLeft"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          Style="{StaticResource PlainListViewStyle}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource MessageProfilePictureButton2}"
+                                    ToolTip="{Binding SeenAt, UpdateSourceTrigger=PropertyChanged}"
+                                    FlowDirection="LeftToRight"
+                                    Width="20"
+                                    Height="20"
+                                    Margin="2"
+                                    Command="{Binding Cmd}">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="{Binding User.MessageProfilePictureUrl}" />
+                                </Button.Background>
+                            </Button>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"
+                                       HorizontalAlignment="Right"
+                                       Width="512"
+                                       Margin="30 0" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="RightMessageTemplate">
+            <StackPanel>
+                <Grid>
+                    <Border Style="{StaticResource RightMessageTemplateStyle}"
+                            ToolTip="{Binding CreatedDate, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" />
+                    </Border>
+                </Grid>
+
+                <ContentControl Template="{DynamicResource WhoSeenTemplate}" />
+            </StackPanel>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="RightTopMessageTemplate">
+            <Grid>
+                <Border Style="{StaticResource RightMessageTemplateStyle}"
+                        ToolTip="{Binding CreatedDate, UpdateSourceTrigger=PropertyChanged}"
+                        Margin="128 8 32 1"
+                        CornerRadius="16 16 4 16">
+                    <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" />
+                </Border>
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="RightMiddleMessageTemplate">
+            <Grid>
+                <Border Style="{StaticResource RightMessageTemplateStyle}"
+                        ToolTip="{Binding CreatedDate, UpdateSourceTrigger=PropertyChanged}"
+                        Margin="128 1 32 1"
+                        CornerRadius="16 4 4 16">
+                    <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" />
+                </Border>
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="RightBottomMessageTemplate">
+            <StackPanel>
+                <Grid>
+                    <Border Style="{StaticResource RightMessageTemplateStyle}"
+                            ToolTip="{Binding CreatedDate, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="128 1 32 8"
+                            CornerRadius="16 4 16 16">
+                        <TextBox Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" />
+                    </Border>
+                </Grid>
+
+                <ContentControl Template="{DynamicResource WhoSeenTemplate}" />
+            </StackPanel>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="DateHeadlineTemplate">
+            <StackPanel>
+                <Grid Margin="0 10 0 0">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsFirst, UpdateSourceTrigger=PropertyChanged}"
+                                             Value="False">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                 IsIndeterminate="True" Width="24" Height="24" Foreground="LightBlue" />
+                </Grid>
+                <TextBlock Text="{Binding CreatedDate, UpdateSourceTrigger=PropertyChanged}"
+                           Style="{StaticResource DateHeadlineTemplateStyle}" />
+            </StackPanel>
+        </ControlTemplate>
+
+    </UserControl.Resources>
+
+    <ListViewItem vm:AttachedProperty.Height="{Binding Text2, UpdateSourceTrigger=PropertyChanged}">
+        <ListViewItem.Style>
+            <Style TargetType="ListViewItem">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding MessageTemplate}"
+                                 Value="LeftMessageTemplate">
+                        <Setter Property="Template"
+                                Value="{DynamicResource LeftMessageTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding MessageTemplate}"
+                                 Value="LeftTopMessageTemplate">
+                        <Setter Property="Template"
+                                Value="{DynamicResource LeftTopMessageTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding MessageTemplate}"
+                                 Value="LeftMiddleMessageTemplate">
+                        <Setter Property="Template"
+                                Value="{DynamicResource LeftMiddleMessageTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding MessageTemplate}"
+                                 Value="LeftBottomMessageTemplate">
+                        <Setter Property="Template"
+                                Value="{DynamicResource LeftBottomMessageTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding MessageTemplate}"
+                                 Value="RightMessageTemplate">
+                        <Setter Property="Template"
+                                Value="{DynamicResource RightMessageTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding MessageTemplate}"
+                                 Value="RightTopMessageTemplate">
+                        <Setter Property="Template"
+                                Value="{DynamicResource RightTopMessageTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding MessageTemplate}"
+                                 Value="RightMiddleMessageTemplate">
+                        <Setter Property="Template"
+                                Value="{DynamicResource RightMiddleMessageTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding MessageTemplate}"
+                                 Value="RightBottomMessageTemplate">
+                        <Setter Property="Template"
+                                Value="{DynamicResource RightBottomMessageTemplate}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding MessageTemplate}"
+                                 Value="DateHeadlineTemplate">
+                        <Setter Property="Template"
+                                Value="{DynamicResource DateHeadlineTemplate}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ListViewItem.Style>
+    </ListViewItem>
+
+</UserControl>

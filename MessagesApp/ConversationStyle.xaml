@@ -1,0 +1,329 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:MessagesApp"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:core="clr-namespace:System;assembly=mscorlib">
+
+    <!--<core:Double x:Key="MessageTextTopMargin">6</core:Double>
+    <core:Double x:Key="MessageTextBottomMargin">6</core:Double>
+    <core:Double x:Key="MessageTextLeftMargin">12</core:Double>
+    <core:Double x:Key="MessageTextRightMargin">14</core:Double>-->
+
+    <core:Double x:Key="MessageTextTopMargin">2</core:Double>
+    <core:Double x:Key="MessageTextBottomMargin">2</core:Double>
+    <core:Double x:Key="MessageTextLeftMargin">10</core:Double>
+    <core:Double x:Key="MessageTextRightMargin">10</core:Double>
+
+    <CornerRadius x:Key="MessageContainerBorderRadius">14</CornerRadius>
+    <CornerRadius x:Key="MessageContainerBorderSmallRadius">3</CornerRadius>
+
+    <Thickness x:Key="LeftMessageTextMargin"
+               Top="{StaticResource MessageTextTopMargin}"
+               Bottom="{StaticResource MessageTextBottomMargin}"
+               Left="{StaticResource MessageTextLeftMargin}"
+               Right="{StaticResource MessageTextRightMargin}"></Thickness>
+
+    <Thickness x:Key="RightMessageTextMargin"
+               Top="{StaticResource MessageTextTopMargin}"
+               Bottom="{StaticResource MessageTextBottomMargin}"
+               Left="{StaticResource MessageTextRightMargin}"
+               Right="{StaticResource MessageTextLeftMargin}"></Thickness>
+    
+    <SolidColorBrush x:Key="MessageBackgroundBrush"
+                     Color="#eee" />
+    <SolidColorBrush x:Key="MessageAuthorForegroundBrush"
+                     Color="#999" />
+    
+    <!--clear listbox style-->
+
+    <Style x:Key="PlainListBoxStyle"
+           TargetType="ListBox">
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBox">
+                    <ItemsPresenter />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--font tyle-->
+
+    <Style x:Key="MessageTextStyle"
+           BasedOn="{StaticResource MaterialDesignTextBox}"
+           TargetType="TextBox">
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="SelectionBrush"
+                Value="Gray" />
+        <Setter Property="Margin"
+                Value="{StaticResource LeftMessageTextMargin}" />
+        <Setter Property="TextWrapping"
+                Value="Wrap" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="materialDesign:TextFieldAssist.DecorationVisibility"
+                Value="Hidden" />
+        <Setter Property="IsReadOnly"
+                Value="True" />
+    </Style>
+
+    <Style x:Key="RightMessageTextStyle"
+           BasedOn="{StaticResource MessageTextStyle}"
+           TargetType="TextBox">
+        <Setter Property="Foreground"
+                Value="{StaticResource MaterialDesignBackground}" />
+        <Setter Property="Margin"
+                Value="{StaticResource RightMessageTextMargin}" />
+    </Style>
+
+    <Style x:Key="MessageProfilePictureButton"
+           TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <!--<Setter Property="Width"
+                Value="24" />
+        <Setter Property="Height"
+                Value="24" />-->
+        <Setter Property="Margin"
+                Value="12 0" />
+        <Setter Property="Padding"
+                Value="0" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+        <Setter Property="VerticalAlignment"
+                Value="Bottom" />
+        <!--<Setter Property="materialDesign:ShadowAssist.ShadowDepth"
+                Value="Depth0" />-->
+    </Style>
+
+    <Style x:Key="HiddenMessageProfilePictureButton"
+           BasedOn="{StaticResource MessageProfilePictureButton}"
+           TargetType="Button">
+        <Setter Property="Visibility"
+                Value="Hidden" />
+    </Style>
+
+    <!--text container style-->
+
+    <Style x:Key="MessageContainerStyle"
+           TargetType="Border">
+        <Setter Property="Background"
+                Value="{StaticResource MessageBackgroundBrush}" />
+        <Setter Property="Width"
+                Value="auto" />
+        <Setter Property="CornerRadius"
+                Value="{StaticResource MessageContainerBorderRadius}" />
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+    </Style>
+
+    <Style x:Key="LeftMessageContainerStyle"
+           BasedOn="{StaticResource MessageContainerStyle}"
+           TargetType="Border">
+        <Setter Property="Margin"
+                Value="0 0 32 0" />
+    </Style>
+
+    <Style x:Key="RightMessageContainerStyle"
+           TargetType="Border"
+           BasedOn="{StaticResource MessageContainerStyle}">
+        <Setter Property="Background"
+                Value="{StaticResource SecondaryAccentBrush}" />
+        <Setter Property="Margin"
+                Value="32 0 0 0" />
+        <Setter Property="HorizontalAlignment"
+                Value="Right" />
+        <Setter Property="Margin"
+                Value="0 0 0 4" />
+    </Style>
+
+    <!--message layout base style-->
+
+    <Style x:Key="LeftMessageStyle"
+           TargetType="Grid">
+        <Style.Resources>
+            <Style BasedOn="{StaticResource MessageTextStyle}"
+                   TargetType="TextBox" />
+            <Style BasedOn="{StaticResource LeftMessageContainerStyle}"
+                   TargetType="Border" />
+            <Style BasedOn="{StaticResource HiddenMessageProfilePictureButton}"
+                   TargetType="Button" />
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground"
+                        Value="{StaticResource MessageAuthorForegroundBrush}" />
+                <Setter Property="Margin"
+                        Value="12 -17" />
+                <Setter Property="FontSize"
+                        Value="11" />
+            </Style>
+        </Style.Resources>
+        <Setter Property="Background"
+                Value="Transparent" />
+    </Style>
+
+    <Style x:Key="RightMessageStyle"
+           TargetType="Grid">
+        <Style.Resources>
+            <Style BasedOn="{StaticResource RightMessageTextStyle}"
+                   TargetType="TextBox" />
+            <Style BasedOn="{StaticResource RightMessageContainerStyle}"
+                   TargetType="Border" />
+            <Style BasedOn="{StaticResource HiddenMessageProfilePictureButton}"
+                   TargetType="Button" />
+            <Style TargetType="TextBlock">
+                <Setter Property="Visibility"
+                        Value="Hidden" />
+            </Style>
+        </Style.Resources>
+        <Setter Property="Background"
+                Value="Transparent" />
+    </Style>
+
+    <!--left message layout-->
+
+    <Style x:Key="LeftSingleMessageStyle"
+           BasedOn="{StaticResource LeftMessageStyle}"
+           TargetType="Grid">
+        <Style.Resources>
+            <Style TargetType="Border"
+                   BasedOn="{StaticResource LeftMessageContainerStyle}">
+                <Setter Property="Margin"
+                        Value="0 14 32 4" />
+            </Style>
+            <Style BasedOn="{StaticResource MessageProfilePictureButton}"
+                   TargetType="Button" />
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="LeftTopMessageStyle"
+           BasedOn="{StaticResource LeftMessageStyle}"
+           TargetType="Grid">
+        <Style.Resources>
+            <Style BasedOn="{StaticResource LeftMessageContainerStyle}"
+                   TargetType="Border">
+                <Setter Property="Margin"
+                        Value="0 15 32 0" />
+                <Setter Property="CornerRadius"
+                        Value="14 14 14 3" />
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="LeftMiddleMessageStyle"
+           BasedOn="{StaticResource LeftMessageStyle}"
+           TargetType="Grid">
+        <Style.Resources>
+            <Style BasedOn="{StaticResource LeftMessageContainerStyle}"
+                   TargetType="Border">
+                <Setter Property="Margin"
+                        Value="0 0 32 0" />
+                <Setter Property="CornerRadius"
+                        Value="3 14 14 3" />
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Visibility"
+                        Value="Hidden" />
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="LeftBottomMessageStyle"
+           BasedOn="{StaticResource LeftMessageStyle}"
+           TargetType="Grid">
+        <Style.Resources>
+            <Style BasedOn="{StaticResource LeftMessageContainerStyle}"
+                   TargetType="Border">
+                <Setter Property="Margin"
+                        Value="0 0 32 4" />
+                <Setter Property="CornerRadius"
+                        Value="3 14 14 14" />
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Visibility"
+                        Value="Hidden" />
+            </Style>
+            <Style BasedOn="{StaticResource MessageProfilePictureButton}"
+                   TargetType="Button" />
+        </Style.Resources>
+    </Style>
+
+    <!--right message layout-->
+
+    <Style x:Key="RightSingleMessageStyle"
+           BasedOn="{StaticResource RightMessageStyle}"
+           TargetType="Grid">
+        <Style.Resources>
+            <Style TargetType="Border"
+                   BasedOn="{StaticResource RightMessageContainerStyle}">
+                <Setter Property="Margin"
+                        Value="32 4 0 4" />
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="RightTopMessageStyle"
+           BasedOn="{StaticResource RightMessageStyle}"
+           TargetType="Grid">
+        <Style.Resources>
+            <Style TargetType="Border"
+                   BasedOn="{StaticResource RightMessageContainerStyle}">
+                <Setter Property="Margin"
+                        Value="32 4 0 0" />
+                <Setter Property="CornerRadius"
+                        Value="14 14 3 14" />
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="RightMiddleMessageStyle"
+           BasedOn="{StaticResource RightMessageStyle}"
+           TargetType="Grid">
+        <Style.Resources>
+            <Style TargetType="Border"
+                   BasedOn="{StaticResource RightMessageContainerStyle}">
+                <Setter Property="Margin"
+                        Value="32 0 0 0" />
+                <Setter Property="CornerRadius"
+                        Value="14 3 3 14" />
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="RightBottomMessageStyle"
+           BasedOn="{StaticResource RightMessageStyle}"
+           TargetType="Grid">
+        <Style.Resources>
+            <Style TargetType="Border"
+                   BasedOn="{StaticResource RightMessageContainerStyle}">
+                <Setter Property="Margin"
+                        Value="32 0 0 4" />
+                <Setter Property="CornerRadius"
+                        Value="14 3 14 14" />
+            </Style>
+        </Style.Resources>
+    </Style>
+
+</ResourceDictionary>

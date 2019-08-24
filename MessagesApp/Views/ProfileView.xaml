@@ -1,0 +1,219 @@
+﻿<UserControl x:Class="MessagesApp.Views.ProfileView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MessagesApp.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d">
+
+    <Grid>
+
+        <materialDesign:DialogHost CloseOnClickAway="False">
+
+            <behaviors:Interaction.Triggers>
+                <behaviors:EventTrigger EventName="MouseUp">
+                    <behaviors:InvokeCommandAction Command="{Binding DragLeaveCmd}" />
+                </behaviors:EventTrigger>
+                <behaviors:EventTrigger EventName="MouseMove">
+                    <behaviors:InvokeCommandAction Command="{Binding DragOverCmd}" />
+                </behaviors:EventTrigger>
+            </behaviors:Interaction.Triggers>
+
+            <materialDesign:DialogHost.DialogContent>
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0"
+                          Width="{Binding ContainerWidth}"
+                          Height="{Binding ContainerHeight}"
+                          ClipToBounds="True"
+                          Background="#eee"
+                          Cursor="SizeAll">
+                        
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="Red">
+                            <Image Source="{Binding Image}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Width="{Binding DisplayedWidth}"
+                                   Height="{Binding DisplayedHeight}">
+                                <Image.RenderTransform>
+                                    <TransformGroup>
+                                        <TranslateTransform X="{Binding LeftScaledOffset}"
+                                                            Y="{Binding TopScaledOffset}" />
+                                        <ScaleTransform CenterX="{Binding LeftMaxOffset}"
+                                                        ScaleX="{Binding Zoom}"
+                                                        CenterY="{Binding TopMaxOffset}"
+                                                        ScaleY="{Binding Zoom}" />
+                                    </TransformGroup>
+                                </Image.RenderTransform>
+                            </Image>
+                        </StackPanel>
+
+                        <Path Fill="#88000000">
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <!--<RectangleGeometry Rect="0 0 688 512" />-->
+                                    <RectangleGeometry Rect="{Binding ContainerRect}" />
+                                    <EllipseGeometry Center="{Binding Center}"
+                                                     RadiusX="{Binding Radius}"
+                                                     RadiusY="{Binding Radius}" />
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="MouseDown">
+                                <behaviors:InvokeCommandAction Command="{Binding DragEnterCmd}" />
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+
+                    </Grid>
+
+                    <StackPanel Grid.Row="1"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Margin="16">
+
+                        <Slider Value="{Binding Zoom}"
+                                Minimum="1"
+                                Maximum="5"
+                                Width="200"
+                                Margin="8 0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center" />
+
+                        <Button Content="Cancel"
+                                Width="100"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Background="Transparent"
+                                Foreground="#ff0000"
+                                Margin="8 0"
+                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+
+                        <Button Content="Confirm"
+                                Width="250"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Background="Transparent"
+                                Foreground="#aaa"
+                                Margin="8 0"
+                                Command="{Binding PictureCropCmd}" />
+
+                    </StackPanel>
+
+                    <WrapPanel Grid.Row="2" Width="555" Height="120">
+                        <TextBlock Text="{Binding Zoom}"
+                                   Padding="10 0" />
+                        <TextBlock Text="{Binding Radius}"
+                                   Padding="10 0" />
+                        <TextBlock Text="{Binding MaxRadius}"
+                                   Padding="10 0" />
+                        <TextBlock Text="{Binding OriginalWidth}"
+                                   Padding="10 0" />
+                        <TextBlock Text="{Binding OriginalHeight}"
+                                   Padding="10 0" />
+                        <TextBlock Text="{Binding DisplayedWidth}"
+                                   Padding="10 0" />
+                        <TextBlock Text="{Binding DisplayedHeight}"
+                                   Padding="10 0" />
+                        <TextBlock Text="{Binding LeftMaxOffset}"
+                                   Padding="10 0" />
+                        <TextBlock Text="{Binding TopMaxOffset}"
+                                   Padding="10 0" />
+                        <TextBlock Text="{Binding LeftScaledOffset}"
+                                   Padding="10 0" />
+                        <TextBlock Text="{Binding TopScaledOffset}"
+                                   Padding="10 0" />
+                        
+                    </WrapPanel>
+
+                </Grid>
+
+            </materialDesign:DialogHost.DialogContent>
+
+            <Border Width="720"
+                    Background="White"
+                    Margin="32"
+                    Style="{StaticResource CardStyle}">
+
+                <Grid>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <Canvas Grid.Row="0"
+                            ClipToBounds="True">
+
+                        <Image Source="{Binding Image}"
+                               Width="auto"
+                               Height="auto"
+                               Margin="72" />
+
+                    </Canvas>
+
+                    <Grid Grid.Row="1"
+                          Height="96"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch">
+
+                        <Button Content="{Binding BindablePosition}"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                materialDesign:ButtonAssist.CornerRadius="16"
+                                BorderThickness="1.8"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Command="{Binding UploadCmd}"
+                                Padding="24 0">
+                        </Button>
+
+                    </Grid>
+
+                    <Grid Grid.Row="2"
+                          Height="96"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch">
+
+                        <Button Content="Change Profile Photo"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                materialDesign:ButtonAssist.CornerRadius="16"
+                                BorderThickness="1.8"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                                Padding="24 0">
+                        </Button>
+
+                    </Grid>
+
+                </Grid>
+
+                <!--<behaviors:Interaction.Triggers>
+                    <behaviors:EventTrigger EventName="MouseDown">
+                        <behaviors:InvokeCommandAction Command="{Binding DragEnterCmd}" />
+                    </behaviors:EventTrigger>
+                    -->
+                <!--<behaviors:EventTrigger EventName="MouseMove">
+                        <behaviors:InvokeCommandAction Command="{Binding DragOverCmd}" />
+                    </behaviors:EventTrigger>-->
+                <!--
+                </behaviors:Interaction.Triggers>-->
+
+            </Border>
+
+        </materialDesign:DialogHost>
+
+    </Grid>
+</UserControl>

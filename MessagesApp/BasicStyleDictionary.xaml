@@ -3,6 +3,23 @@
                     xmlns:local="clr-namespace:MessagesApp"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
 
+    <Color x:Key="ShadowColor">#00363A</Color>
+    <Color x:Key="ErrorColor">#F50057</Color>
+    <Color x:Key="RoundedButtonBorderColor">#e0e0e0</Color>
+    <Color x:Key="RoundedButtonBorderOnHoverColor">#64ffda</Color>
+
+    <SolidColorBrush x:Key="ShadowBrush"
+                     Color="{StaticResource ShadowColor}" />
+
+    <SolidColorBrush x:Key="ErrorBrush"
+                     Color="#F50057" />
+
+    <SolidColorBrush x:Key="ValidationErrorBrush"
+                     Color="{StaticResource ErrorColor}" />
+
+    <SolidColorBrush x:Key="RoundedButtonBorderBrush"
+                     Color="{StaticResource RoundedButtonBorderColor}" />
+
     <Style x:Key="BasicStyle"
            TargetType="{x:Type UserControl}">
         <Setter Property="TextElement.Foreground"
@@ -28,6 +45,52 @@
                 Value="16 12" />
     </Style>
 
+    <!--<ControlTemplate x:Key="CardStyle"                     
+                     TargetType="{x:Type ContentControl}">
+        <Grid>
+            <Border Background="Blue"
+                    CornerRadius="2">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="35"
+                                      ShadowDepth="8"
+                                      Direction="270"
+                                      Color="{StaticResource MaterialDesignShadow}"
+                                      Opacity=".16"
+                                      RenderingBias="Performance" />
+                </Border.Effect>
+                <ContentPresenter />
+            </Border>
+            -->
+    <!--<ContentPresenter />-->
+    <!--
+        </Grid>
+    </ControlTemplate>-->
+
+    <DropShadowEffect x:Key="ShadowStyle1" BlurRadius="35"
+                      ShadowDepth="8"
+                      Direction="270"
+                      Color="{StaticResource MaterialDesignShadow}"
+                      Opacity=".16"
+                      RenderingBias="Performance" />
+
+    <DropShadowEffect x:Key="ShadowStyle2"
+                      BlurRadius="35"
+                      ShadowDepth="8"
+                      Direction="90"
+                      Color="{StaticResource MaterialDesignShadow}"
+                      Opacity=".16"
+                      RenderingBias="Performance" />
+
+    <Style x:Key="CardStyle"
+           TargetType="{x:Type Border}">
+        <Setter Property="CornerRadius"
+                Value="2" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Effect"
+                Value="{StaticResource ShadowStyle1}" />
+    </Style>
+    
     <Style x:Key="CardDefaultStyle"
            TargetType="{x:Type materialDesign:Card}">
         <Setter Property="Background"
@@ -36,19 +99,233 @@
                 Value="32" />
     </Style>
 
+    <!--textbox style-->
+
+    <Style x:Key="MaterialRoundedTextBox"
+           TargetType="{x:Type Border}">
+        <Setter Property="Background"
+                Value="#eee" />
+        <Setter Property="Height"
+                Value="32" />
+        <Setter Property="CornerRadius"
+                Value="16" />
+        <Style.Resources>
+            <Style BasedOn="{StaticResource MaterialDesignTextBox}"
+                   TargetType="{x:Type TextBox}">
+                <Setter Property="Background"
+                        Value="Transparent" />
+                <Setter Property="Margin"
+                        Value="12 0" />
+                <Setter Property="BorderThickness"
+                        Value="0" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="materialDesign:TextFieldAssist.DecorationVisibility"
+                        Value="Hidden" />
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="DefaultErrorHint"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground"
+                Value="{StaticResource ValidationErrorBrush}" />
+        <Setter Property="Height"
+                Value="32" />
+        <Setter Property="Margin"
+                Value="0 2" />
+        <Setter Property="FontSize"
+                Value="12" />
+        <Setter Property="TextAlignment"
+                Value="Right" />
+        <Setter Property="TextWrapping"
+                Value="Wrap" />
+        <Setter Property="FontWeight"
+                Value="Regular" />
+    </Style>
+
+    <!--<Style x:Key="aaa"
+           TargetType="{x:Type materialDesign:SmartHint}">
+        <Setter Property="TextBlock.LineHeight"
+    </Style>-->
+
     <Style x:Key="FloatingHintTextBox"
            TargetType="{x:Type TextBox}"
            BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}">
         <Setter Property="Width"
-                Value="180" />
+                Value="250" />
         <Setter Property="Margin"
-                Value="0 8" />
-        <Setter Property="materialDesign:ValidationAssist.Background"
+                Value="0 8 0 32" />
+        <Setter Property="FontSize"
+                Value="16" />
+        <!--<Setter Property="materialDesign:ValidationAssist.Background"
                 Value="Transparent" />
         <Setter Property="materialDesign:ValidationAssist.UsePopup"
                 Value="True" />
         <Setter Property="materialDesign:ValidationAssist.PopupPlacement"
-                Value="Bottom" />
+                Value="Bottom" />-->
+
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel>
+                        <AdornedElementPlaceholder />
+                        <TextBlock Text="{Binding ErrorContent}"
+                                   Style="{StaticResource DefaultErrorHint}"
+                                   Width="250" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+    <!--button style-->
+
+    <Style x:Key="RoundedButton"
+           TargetType="{x:Type Button}">
+        <Setter Property="Background"
+                Value="{StaticResource RoundedButtonBorderBrush}" />
+        <!--<Setter Property="Foreground"
+                Value="{StaticResource MaterialDesignBodyLight}" />-->
+        <Setter Property="Foreground"
+                Value="{StaticResource RoundedButtonBorderBrush}" />
+        <Setter Property="Height"
+                Value="32" />
+        <Setter Property="materialDesign:ShadowAssist.ShadowDepth"
+                Value="Depth5" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+        <!--<Setter Property="Effect"
+                Value="{StaticResource MaterialDesignShadowDepth1}" />-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Border BorderBrush="{TemplateBinding Background}"
+                                Panel.ZIndex="1"
+                                BorderThickness="2"
+                                CornerRadius="16">
+                            <Grid>
+                                <!--<materialDesign:Ripple materialDesign:RippleAssist.Feedback="LightGray">
+                                <Grid>
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Panel.ZIndex="1" />
+                                    -->
+                                <!--<Rectangle Fill="LightGray"
+                                               Width="auto"
+                                               Height="28"
+                                               RadiusX="16"
+                                               RadiusY="16"
+                                               Cursor="Hand"
+                                               Panel.ZIndex="0" />-->
+                                <!--
+                                </Grid>
+                            </materialDesign:Ripple>-->
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  IsHitTestVisible="False"
+                                                  Panel.ZIndex="2" />
+                                <materialDesign:Ripple materialDesign:RippleAssist.Feedback="LightGray"
+                                                       Panel.ZIndex="1">
+
+                                </materialDesign:Ripple>
+                                <!--<Rectangle Width="auto"
+                                       Height="28"
+                                       RadiusX="16"
+                                       RadiusY="16"
+                                       Cursor="Hand"
+                                       Panel.ZIndex="2" />-->
+                                <!--<Grid Panel.ZIndex="1">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Panel.ZIndex="1" />
+                                -->
+                                <!--<Rectangle Fill="LightGray"
+                                               Width="auto"
+                                               Height="28"
+                                               RadiusX="16"
+                                               RadiusY="16"
+                                               Cursor="Hand"
+                                               Panel.ZIndex="0" />-->
+                                <!--
+                            </Grid>-->
+                                <!--<Grid.Effect s>
+                                <DropShadowEffect effec
+                            </Grid.Effect>-->
+                            </Grid>
+                            <!--<ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />-->
+                        </Border>
+                        <Border Effect="{StaticResource MaterialDesignShadowDepth3}"
+                                Panel.ZIndex="0"
+                                Width="200"
+                                Height="32"
+                                BorderThickness="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <!--<Setter Property="Effect">
+            <Setter.Value>
+                <materialDesign:TransitionEffect Duration="3" />
+            </Setter.Value>
+        </Setter>-->
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="Button.MouseEnter">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation To="{StaticResource RoundedButtonBorderOnHoverColor}"
+                                        Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                        FillBehavior="HoldEnd"
+                                        Duration="0:0:0.2" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="Button.MouseLeave">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <ColorAnimation To="{StaticResource RoundedButtonBorderColor}"
+                                        Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                        FillBehavior="HoldEnd"
+                                        Duration="0:0:0.2" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="DefaultRaisedButton"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource MaterialDesignRaisedButton}">
+        <Setter Property="Margin"
+                Value="0 16" />
+    </Style>
+
+    <Style x:Key="DefaultRaisedDarkButton"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource MaterialDesignRaisedDarkButton}">
+        <Setter Property="Margin"
+                Value="0 16" />
+    </Style>
+
+    <Style x:Key="DefaultTabRadioButton"
+           TargetType="{x:Type RadioButton}"
+           BasedOn="{StaticResource MaterialDesignTabRadioButton}">
+        <Setter Property="Cursor"
+                Value="Hand" />
+        <Setter Property="MinWidth"
+                Value="0" />
+        <Setter Property="Padding"
+                Value="0" />
+        <Style.Triggers>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Foreground"
+                        Value="{StaticResource MaterialDesignBodyLight}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>

@@ -16,12 +16,34 @@ namespace MessagesApp.ViewModels
         {
             mainViewModel = mvm;
             RelayCommand = new RelayCommand(Navigate);
+
+            //kMainViewModel = new MainViewModel();
+            LoginViewModel = new LoginViewModel2(this);
+            RegisterViewModel = new RegisterViewModel();
+            TransitionerViewModel = new TransitionerViewModel();
+            ConversationViewModel = new ConversationViewModel();
+            ProfileViewModel = new ProfileViewModel();
         }
 
         public RelayCommand RelayCommand { get; set; }
 
+        //public MainViewModel MainViewModel { get; set; }
+        public LoginViewModel2 LoginViewModel { get; set; }
+        public RegisterViewModel RegisterViewModel { get; set; }
+        public TransitionerViewModel TransitionerViewModel { get; set; }
+        public ConversationViewModel ConversationViewModel { get; set; }
+        public ProfileViewModel ProfileViewModel { get; set; }
+
+        private int index;
+        public int Index
+        {
+            get => index;
+            set => SetProperty(ref index, value);
+        }
+
         public void Navigate(object param)
         {
+            Index = int.Parse(param as string) - 1;
             switch (int.Parse(param as string))
             {
                 case 1:
@@ -32,6 +54,15 @@ namespace MessagesApp.ViewModels
                     break;
                 case 3:
                     mainViewModel.ContentView = new RegisterViewModel();
+                    break;
+                case 4:
+                    mainViewModel.ContentView = new TransitionerViewModel();
+                    break;
+                case 5:
+                    mainViewModel.ContentView = new ConversationViewModel();
+                    break;
+                case 6:
+                    mainViewModel.ContentView = new ProfileViewModel();
                     break;
                 default:
                     System.Windows.Application.Current.Shutdown();

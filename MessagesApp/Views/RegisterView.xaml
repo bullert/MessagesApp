@@ -3,37 +3,257 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:MessagesApp.Views"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:vm="clr-namespace:MessagesApp.ViewModels"
+             xmlns:local="clr-namespace:MessagesApp.Views"
              mc:Ignorable="d"
-             Style="{StaticResource BasicStyle}">
-    <Grid>
-        <materialDesign:Card Style="{StaticResource CardDefaultStyle}">
-            <StackPanel Margin="32" HorizontalAlignment="Left">
-                <TextBlock>fsfsfsd</TextBlock>
-                <TextBox Text="{Binding Password}"
-                         Width="200"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                <TextBox Text="{Binding PasswdCrypt}"
-                         Width="300"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                <TextBox Text="{Binding Hash}"
-                         Width="300"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                <TextBox Text="{Binding Length}"
-                         Width="200"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+             Style="{StaticResource BasicStyle}"
+             Background="{StaticResource MaterialDesignPaper}">
 
-                <Slider Width="200"
-                        Margin="0 16"
-                        TickFrequency="2"
-                        Style="{StaticResource MaterialDesignDiscreteSlider}"
-                        Value="50" />
-                
-                <Button Content="Update"
-                        Width="150"
-                        Margin="0 20"
-                        Command="{Binding Update}" />
+    <UserControl.Resources>
+        <vm:MultiValueConverter x:Key="MultiValueConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.Effect>
+            <DropShadowEffect BlurRadius="35"
+                              ShadowDepth="10"
+                              Direction="270"
+                              Color="{StaticResource ShadowColor}"
+                              Opacity=".22" />
+        </Grid.Effect>
+
+        <materialDesign:Card Style="{StaticResource CardDefaultStyle}"
+                             VerticalAlignment="Center"
+                             materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                             Width="560">
+
+            <StackPanel Margin="0 32">
+
+                <StackPanel Orientation="Horizontal"
+                            Margin="-3"
+                            HorizontalAlignment="Center">
+
+                    <RadioButton Style="{StaticResource DefaultTabRadioButton}"
+                                 BorderBrush="{StaticResource PrimaryHueLightBrush}"
+                                 Content="Name"
+                                 Command="{Binding ChangeSlideCmd}"
+                                 CommandParameter="0"
+                                 IsChecked="True" />
+
+                    <materialDesign:PackIcon Kind="KeyboardArrowRight"
+                                             Foreground="{StaticResource MaterialDesignCheckBoxDisabled}"
+                                             VerticalAlignment="Center"
+                                             Height="22"
+                                             Width="22"
+                                             Margin="32 0" />
+
+                    <RadioButton Style="{StaticResource DefaultTabRadioButton}"
+                                 BorderBrush="{StaticResource PrimaryHueLightBrush}"
+                                 Content="Password"
+                                 Command="{Binding ChangeSlideCmd}"
+                                 CommandParameter="1" />
+
+                    <materialDesign:PackIcon Kind="KeyboardArrowRight"
+                                             Foreground="{StaticResource MaterialDesignCheckBoxDisabled}"
+                                             VerticalAlignment="Center"
+                                             Height="22"
+                                             Width="22"
+                                             Margin="32 0" />
+
+                    <RadioButton Style="{StaticResource DefaultTabRadioButton}"
+                                 BorderBrush="{StaticResource PrimaryHueLightBrush}"
+                                 Content="Final"
+                                 Command="{Binding ChangeSlideCmd}"
+                                 CommandParameter="0"
+                                 IsEnabled="False">
+                    </RadioButton>
+
+                </StackPanel>
+
+                <Separator Background="{StaticResource MaterialDesignDivider}" />
+
+                <StackPanel Margin="32"
+                            Width="auto">
+
+                    <materialDesign:Transitioner SelectedIndex="{Binding SlideIndex, UpdateSourceTrigger=PropertyChanged}"
+                                                 AutoApplyTransitionOrigins="True">
+
+                        <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromRight}">
+                            <materialDesign:TransitionerSlide.ForwardWipe>
+                                <materialDesign:SlideWipe />
+                            </materialDesign:TransitionerSlide.ForwardWipe>
+                            <StackPanel>
+
+                                <TextBlock Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                                           Text="Sign In"
+                                           HorizontalAlignment="Center"
+                                           Margin="0 16 0 16"></TextBlock>
+
+                                <TextBox Style="{StaticResource FloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Email"
+                                         Text="{Binding Email, ValidatesOnNotifyDataErrors=True}">
+                                    <behaviors:Interaction.Triggers>
+                                        <behaviors:EventTrigger EventName="LostFocus">
+                                            <behaviors:InvokeCommandAction Command="{Binding EmailLostFocusCmd}" />
+                                        </behaviors:EventTrigger>
+                                    </behaviors:Interaction.Triggers>
+                                </TextBox>
+
+                                <StackPanel Margin="0 8 0 0"
+                                            Width="250">
+                                    <PasswordBox Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                                                 x:Name="PasswordBox"
+                                                 FontSize="16"
+                                                 BorderBrush="{Binding PasswordErrorBrush}"
+                                                 materialDesign:TextFieldAssist.UnderlineBrush="{Binding PasswordErrorBrush}"
+                                                 materialDesign:HintAssist.Hint="Password">
+                                        <behaviors:Interaction.Triggers>
+                                            <behaviors:EventTrigger EventName="LostFocus">
+                                                <behaviors:InvokeCommandAction Command="{Binding PasswordLostFocusCmd}"
+                                                                               CommandParameter="{Binding ElementName=PasswordBox}" />
+                                            </behaviors:EventTrigger>
+                                        </behaviors:Interaction.Triggers>
+                                    </PasswordBox>
+                                    <TextBlock Text="{Binding PasswordErrorContent, UpdateSourceTrigger=PropertyChanged}"
+                                               Style="{StaticResource DefaultErrorHint}" />
+                                </StackPanel>
+
+                                <StackPanel Margin="0 8 0 0"
+                                            Width="250">
+                                    <PasswordBox Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                                                 x:Name="ConfirmPasswordBox"
+                                                 FontSize="16"
+                                                 BorderBrush="{Binding ConfirmPasswordErrorBrush}"
+                                                 materialDesign:TextFieldAssist.UnderlineBrush="{Binding ConfirmPasswordErrorBrush}"
+                                                 materialDesign:HintAssist.Hint="Confirm password">
+                                        <behaviors:Interaction.Triggers>
+                                            <behaviors:EventTrigger EventName="LostFocus">
+                                                <behaviors:InvokeCommandAction Command="{Binding ConfirmPasswordLostFocusCmd}">
+                                                    <behaviors:InvokeCommandAction.CommandParameter>
+                                                        <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                            <Binding ElementName="PasswordBox" />
+                                                            <Binding ElementName="ConfirmPasswordBox" />
+                                                        </MultiBinding>
+                                                    </behaviors:InvokeCommandAction.CommandParameter>
+                                                </behaviors:InvokeCommandAction>
+                                            </behaviors:EventTrigger>
+                                        </behaviors:Interaction.Triggers>
+                                    </PasswordBox>
+                                    <TextBlock Text="{Binding ConfirmPasswordErrorContent, UpdateSourceTrigger=PropertyChanged}"
+                                               Style="{StaticResource DefaultErrorHint}" />
+                                </StackPanel>
+                                
+                                <Button Style="{DynamicResource RoundedButton}"
+                                        Margin="0 16" 
+                                        Content="sfsfsd" />
+
+                                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                        Margin="0 16"
+                                        Content="sfsfsd" />
+
+                                <StackPanel materialDesign:ShadowAssist.ShadowDepth="Depth5">
+                                    <Grid Width="120">
+                                        <Button Content="Dalej"
+                                                Command="{Binding ValidateCmd}">
+                                            <Button.CommandParameter>
+                                                <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                    <Binding ElementName="PasswordBox" />
+                                                    <Binding ElementName="ConfirmPasswordBox" />
+                                                </MultiBinding>
+                                            </Button.CommandParameter>
+                                        </Button>
+                                        <Border BorderBrush="{StaticResource ShadowBrush}"
+                                                CornerRadius="16"
+                                                materialDesign:ShadowAssist.ShadowDepth="Depth5"
+                                                BorderThickness="2">
+                                        </Border>
+                                        <Grid.Clip>
+                                            <RectangleGeometry Rect="0,0,120,32"
+                                                               RadiusX="16"
+                                                               RadiusY="16" />
+                                        </Grid.Clip>
+                                    </Grid>
+                                </StackPanel>
+
+                                <Button Content="fadf" Margin="0 16"
+                                        Width="120" />
+
+                                <!--<Border Width="120"
+                                        Margin="0 32"
+                                        BorderBrush="{StaticResource MaterialDesignCheckBoxDisabled}"
+                                        BorderThickness="0"
+                                        
+                                        CornerRadius="16">
+                                    <Button Content="Dalej"
+                                            BorderThickness="2"
+                                            Width="auto"
+                                            Command="{Binding ValidateCmd}">
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource MaterialDesignRaisedButton}"
+                                                   TargetType="{x:Type Button}">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver"
+                                                             Value="True">
+                                                        <Setter Property="Background"
+                                                                Value="White" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                        <Button.Clip>
+                                            <RectangleGeometry Rect="0,0,116,32"
+                                                               RadiusX="16"
+                                                               RadiusY="16" />
+                                        </Button.Clip>
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiValueConverter}">
+                                                <Binding ElementName="PasswordBox" />
+                                                <Binding ElementName="ConfirmPasswordBox" />
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
+                                    </Button>
+                                </Border>-->
+
+                            </StackPanel>
+                        </materialDesign:TransitionerSlide>
+
+                        <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromRight}">
+                            <materialDesign:TransitionerSlide.BackwardWipe>
+                                <materialDesign:SlideWipe />
+                            </materialDesign:TransitionerSlide.BackwardWipe>
+                            <StackPanel>
+
+                                <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True}"
+                                         Style="{StaticResource FloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="First Name" />
+
+                                <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}"
+                                         Style="{StaticResource FloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Last Name" />
+
+                                <!--<TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True, Mode=TwoWay}"
+                                 Style="{StaticResource FloatingHintTextBox}"
+                                 materialDesign:HintAssist.Hint="Email" />-->
+
+                                <!--<TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}"
+                                     Style="{StaticResource FloatingHintTextBox}"
+                                     materialDesign:HintAssist.Hint="Email">
+                                <behaviors:Interaction.Triggers>
+                                    <behaviors:EventTrigger EventName="LostFocus">
+                                        <behaviors:InvokeCommandAction Command="{Binding ValidationCheckCommand}" />
+                                    </behaviors:EventTrigger>
+                                </behaviors:Interaction.Triggers>
+                            </TextBox>-->
+
+                            </StackPanel>
+                        </materialDesign:TransitionerSlide>
+
+                    </materialDesign:Transitioner>
+
+                </StackPanel>
+
             </StackPanel>
         </materialDesign:Card>
     </Grid>

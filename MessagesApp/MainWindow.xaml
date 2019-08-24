@@ -11,16 +11,20 @@
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="14"
-        TextOptions.TextFormattingMode="Ideal" 
-        TextOptions.TextRenderingMode="Auto"        
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="MainWindow" Height="700" Width="1200">
-    
+        Title="MainWindow"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterOwner"
+        Height="700"
+        Width="1200">
+
     <Window.DataContext>
         <viewmodels:MainViewModel />
     </Window.DataContext>
-    
+
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
             <views:MainView />
@@ -28,22 +32,141 @@
         <DataTemplate DataType="{x:Type viewmodels:NavigationViewModel}">
             <views:NavigationView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
-            <views:LoginView />
+        <DataTemplate DataType="{x:Type viewmodels:LoginViewModel2}">
+            <views:LoginView2 />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewmodels:RegisterViewModel}">
             <views:RegisterView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:TransitionerViewModel}">
+            <views:TransitionerView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:ConversationViewModel}">
+            <views:ConversationView x:Name="ConversationView" />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:ProfileViewModel}">
+            <views:ProfileView x:Name="ProfileView"/>
+        </DataTemplate>
     </Window.Resources>
-    
+
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        
-        <ContentControl Grid.Row="0" Content="{Binding Navigation}" Panel.ZIndex="1" />
-        
-        <ContentControl Grid.Row="1" Content="{Binding ContentView}" Panel.ZIndex="0" />
+        <materialDesign:DialogHost CloseOnClickAway="True">
+            <materialDesign:DialogHost.DialogContent>
+
+                <StackPanel Margin="24 0">
+
+                    <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                               Foreground="Red"
+                               Margin="0 16"
+                               Text="Error" />
+
+                    <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}"
+                               Text="Error message right here."
+                               Margin="0 8 0 0" />
+
+                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                            Content="OK"
+                            Margin="0 16"
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                            Width="96" />
+
+                </StackPanel>
+
+            </materialDesign:DialogHost.DialogContent>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <ContentControl Grid.Row="0"
+                                Content="{Binding Navigation}"
+                                Panel.ZIndex="1" />
+
+
+
+                <!--<ContentControl Grid.Row="1" Content="{Binding ContentView}" Panel.ZIndex="0" />-->
+
+                <materialDesign:Transitioner Grid.Row="1"
+                                             Panel.ZIndex="0"
+                                             Background="White"
+                                             SelectedIndex="{Binding Navigation.Index}"
+                                             AutoApplyTransitionOrigins="True">
+
+
+
+                    <!--<materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromBottom, Duration=0:0:2}" ClipToBounds="True">
+                <views:MainView />
+            </materialDesign:TransitionerSlide>
+
+            <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect Kind=None, Duration=0:0:2}">
+                <views:LoginView />
+            </materialDesign:TransitionerSlide>-->
+
+                    <!--<materialDesign:TransitionerSlide>
+                <views:MainView />
+                <materialDesign:TransitionerSlide.OpeningEffects>
+                    <materialDesign:TransitionEffect Kind="FadeIn"
+                                                     Duration="0:0:2" />
+                    <materialDesign:TransitionEffect Kind="SlideInFromTop"
+                                                     Duration="0:0:2" />
+                </materialDesign:TransitionerSlide.OpeningEffects>
+            </materialDesign:TransitionerSlide>-->
+
+                    <materialDesign:TransitionerSlide>
+                        <materialDesign:TransitionerSlide.ForwardWipe>
+                            <materialDesign:FadeWipe />
+                        </materialDesign:TransitionerSlide.ForwardWipe>
+                        <views:MainView />
+                    </materialDesign:TransitionerSlide>
+
+                    <materialDesign:TransitionerSlide>
+                        <materialDesign:TransitionerSlide.BackwardWipe>
+                            <materialDesign:FadeWipe />
+                        </materialDesign:TransitionerSlide.BackwardWipe>
+                        <!--<views:LoginView2 />-->
+                        <!--<viewmodels:LoginViewModel />-->
+                        <ContentControl Content="{Binding Navigation.LoginViewModel}" />
+                    </materialDesign:TransitionerSlide>
+
+                    <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromTop, Duration=0:0:0:1}">
+                        <materialDesign:TransitionerSlide.BackwardWipe>
+                            <materialDesign:FadeWipe />
+                        </materialDesign:TransitionerSlide.BackwardWipe>
+                        <!--<views:RegisterView />-->
+                        <ContentControl Content="{Binding Navigation.RegisterViewModel}" />
+                    </materialDesign:TransitionerSlide>
+
+                    <materialDesign:TransitionerSlide OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromTop, Duration=0:0:0:1}">
+                        <materialDesign:TransitionerSlide.BackwardWipe>
+                            <materialDesign:FadeWipe />
+                        </materialDesign:TransitionerSlide.BackwardWipe>
+                        <ContentControl Content="{Binding Navigation.TransitionerViewModel}" />
+                    </materialDesign:TransitionerSlide>
+
+                    <materialDesign:TransitionerSlide>
+                        <materialDesign:TransitionerSlide.BackwardWipe>
+                            <materialDesign:FadeWipe />
+                        </materialDesign:TransitionerSlide.BackwardWipe>
+                        <ContentControl Content="{Binding Navigation.ConversationViewModel}" />
+                    </materialDesign:TransitionerSlide>
+
+                    <materialDesign:TransitionerSlide>
+                        <ContentControl Content="{Binding Navigation.ProfileViewModel}" />
+                    </materialDesign:TransitionerSlide>
+
+                    <!--<views:MainView />
+            <views:LoginView />
+            <views:RegisterView />
+            <views:TransitionerView />-->
+
+                </materialDesign:Transitioner>
+
+            </Grid>
+
+        </materialDesign:DialogHost>
+
     </Grid>
+
 </Window>
