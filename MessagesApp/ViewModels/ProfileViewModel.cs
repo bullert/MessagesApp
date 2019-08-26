@@ -22,6 +22,7 @@ namespace MessagesApp.ViewModels
             ContainerWidth = 688;
             ContainerHeight = 512;
             Radius = 140;
+            //DestinationRadius = 150;
             Zoom = 1;
             
             UploadCmd = new DelegateCommand(OnUpload, () => true);
@@ -71,6 +72,13 @@ namespace MessagesApp.ViewModels
             }
         }
 
+        //private double destinationRadius;
+        //public double DestinationRadius
+        //{
+        //    get => destinationRadius;
+        //    set => SetProperty(ref destinationRadius, value);
+        //}
+
         private System.Windows.Point center;
         public System.Windows.Point Center
         {
@@ -83,6 +91,13 @@ namespace MessagesApp.ViewModels
         {
             get => radius;
             set => SetProperty(ref radius, value);
+        }
+
+        private double minRadius;
+        public double MinRadius
+        {
+            get => minRadius;
+            set => SetProperty(ref minRadius, value);
         }
 
         private double maxRadius;
@@ -243,6 +258,13 @@ namespace MessagesApp.ViewModels
             set => SetProperty(ref image, value);
         }
 
+        private BitmapImage image2;
+        public BitmapImage Image2
+        {
+            get => image2;
+            set => SetProperty(ref image2, value);
+        }
+
         private void OnDragEnter()
         {
             IsDrag = true;
@@ -295,27 +317,11 @@ namespace MessagesApp.ViewModels
 
         private void OnResize()
         {
-            //var x = LeftOffset;
-            //var y = TopOffset;
-
             var z = (Radius * Zoom - Radius) / Zoom;
             var zx = (DisplayedWidth / 2 * Zoom - DisplayedWidth / 2) / Zoom;
             var zy = (DisplayedHeight / 2 * Zoom - DisplayedHeight / 2) / Zoom;
 
             Clamp();
-
-            //LeftOffset = (x + r) * Zoom;
-            //TopOffset = (y + r) * Zoom;
-            //LeftScaledOffset = (LeftOffset) - DisplayedWidth / 2 * s + Radius * s;
-
-            //LeftScaledOffset = (LeftOffset) - zx;
-            //TopScaledOffset = TopOffset - zy;
-
-            //LeftOffset = LeftScaledOffset + zx;
-            //TopOffset = TopScaledOffset + zy;
-
-            //ScaledWidth = DisplayedWidth * Zoom;
-            //ScaledHeight = DisplayedHeight * Zoom;
         }
 
         public void OnUpload()
@@ -327,8 +333,7 @@ namespace MessagesApp.ViewModels
             {
                 byte[] buffer = File.ReadAllBytes(fileDialog.FileName);
                 string result = System.Text.Encoding.UTF8.GetString(buffer);
-                //Text = result;
-
+                
                 //Image = new BitmapImage(new Uri(fileDialog.FileName));
 
                 var img = new BitmapImage();
@@ -340,12 +345,8 @@ namespace MessagesApp.ViewModels
                 Image = img;
                 OriginalWidth = img.Width;
                 OriginalHeight = img.Height;
-
-                //double max = (Math.Max(OriginalWidth, OriginalHeight) - 320) / 2;
-
+                
                 Calc();
-
-                Zoom = 1;
             }
         }
 
@@ -359,22 +360,11 @@ namespace MessagesApp.ViewModels
             {
                 DisplayedWidth = diameter;
                 DisplayedHeight = OriginalHeight / OriginalWidth * diameter;
-
-                //TopOffset = (max - 320) / 2;
-                //LeftOffset = 0;
-                //VerticalBound = (max - 320) / 2;
-                //Bound.Left = (max - 320) / 2;
-                //Bound = new Thickness(0, max, 0, -max);
             }
             else
             {
                 DisplayedWidth = OriginalWidth / OriginalHeight * diameter;
                 DisplayedHeight = diameter;
-
-                //TopOffset = 0;
-                //LeftOffset = (max - 320) / 2;
-                //HorizontalBound = (max - 320) / 2;
-                //Bound = new Thickness(max, 0, max, 0);
             }
 
             ScaledWidth = DisplayedWidth;
@@ -397,118 +387,64 @@ namespace MessagesApp.ViewModels
             LeftScaledOffset = 0;
             TopScaledOffset = 0;
 
-            //MessageBox.Show($"{leftMaxOffset}, { LeftOffset}, { topMaxOffset}, { TopOffset}");
+            Zoom = 1;
+        }
 
-            //Bound = new Thickness(leftMaxOffset, topMaxOffset, 0, 0);
+        private Bitmap ImageToBitmap(BitmapImage bitmapImage)
+        {
+            MemoryStream stream = new MemoryStream();
+            BitmapEncoder encoder = new BmpBitmapEncoder();
 
-            //Position = new Point(TopOffset, LeftOffset);
+            encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
+            encoder.Save(stream);
 
-            //var fileInfo = new FileInfo(fileDialog.FileName);
+            return new System.Drawing.Bitmap(stream);
+        }
 
-            //Text = fileInfo.Length.ToString() + " " + img.Width.ToString() + " " + img.Height.ToString();
+        private BitmapImage BitmapToImage(Bitmap bitmap)
+        {
+            var stream = new MemoryStream();
+            var bitmapImage = new BitmapImage();
 
-            //using (var ms = new MemoryStream(buffer))
-            //{
-            //    Image = Image.FromStream(ms);
-            //}
+            bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+            stream.Position = 0;
+            
+            bitmapImage.BeginInit();
+            bitmapImage.StreamSource = stream;
+            bitmapImage.EndInit();
+
+            return bitmapImage;
+        }
+
+        private Bitmap ResizeBitmap(Bitmap bitmap, System.Drawing.Size size)
+        {
+            return new Bitmap(bitmap, size);
+        }
+
+        private Bitmap CropBitmap(Bitmap bitmap, Rectangle cropRect)
+        {
+            return bitmap.Clone(cropRect, bitmap.PixelFormat);
         }
 
         private void OnCrop()
         {
-            //System.Windows.Media.Transform tr = new TranslateTransform();
-            //tr.Transform.s
+            var bitmap = ImageToBitmap(Image);
 
-            //Bitmap bmPhoto = new Bitmap(333, 333);
-            //bmPhoto.SetResolution(72, 72);
+            double diameter = MaxRadius;
 
-            ////MemoryStream outStream = new MemoryStream();
-            ////BitmapEncoder enc = new BmpBitmapEncoder();
-            ////enc.Frames.Add(BitmapFrame.Create(Image));
-            ////enc.Save(outStream);
-            ////System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outStream);
-
-            //Graphics grPhoto = Graphics.FromImage(bmPhoto);
-            //grPhoto.SmoothingMode = SmoothingMode.AntiAlias;
-            //grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            //grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-            //grPhoto.DrawImage(Image, new Rectangle(0, 0, 333, 333), 0, 0, 222, 222, GraphicsUnit.Pixel);
-
-            MemoryStream outStream = new MemoryStream();
-            BitmapEncoder enc = new BmpBitmapEncoder();
-            enc.Frames.Add(BitmapFrame.Create(Image));
-            enc.Save(outStream);
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(outStream);
-
-            //System.Drawing.Color[,] ar = new System.Drawing.Color[280, 280];
-            int size = (int)(MaxRadius / Zoom);
-            int xs = (int)(LeftMaxOffset);
-            int ys = (int)(TopMaxOffset);
-            //int xs = (int)(LeftScaledOffset * (size / DisplayedWidth));
-            //int ys = (int)(TopScaledOffset * (size / DisplayedHeight));
-            //int size = (int)(Radius * 4);
-            var newbitmap = new Bitmap(size, size);
-
-            //int xs2 = 0 + (int)(((size / 2) * (Zoom - 1)));
-            //int ys2 = 0 + (int)(((size / 2) * (Zoom - 1)));
-            double hw = OriginalWidth / 2;
-            double hh = OriginalHeight / 2;
-
-            //int xs2 = 0 + (int)(hw - hw / 5 * (6 - (Zoom)));
-            //int ys2 = 0 + (int)(hh - hh / 5 * (6 - (Zoom)));
-            double z = (Zoom - 1) * 6 / 5;
-
-            int xs2 = 0 + (int)(300 * z);
-            int ys2 = 0 + (int)(300 * z);
-
-            MessageBox.Show($"{xs2} {ys2} {hw} {hh} ");
-            //MessageBox.Show($"{Zoom} {xs} {ys} {xs2} {ys2}");
-            Rectangle crop = new Rectangle(xs2, ys2, size, size);
-
-            // Here we capture another resource.
-            Bitmap croppedImage = bitmap.Clone(crop, bitmap.PixelFormat);
-
-
-            //for (int i = 0; i < size; i++)
-            //{
-            //    for (int j = 0; j < size; j++)
-            //    {
-            //        if (i < 0 || i >= newbitmap.Width || i >= bitmap.Width) continue;
-            //        if (j < 0 || j >= newbitmap.Height || j >= bitmap.Height) continue;
-            //        newbitmap.SetPixel(i, j, bitmap.GetPixel(i + xs, j + ys));
-            //        //ar[i - 50, j - 50] = bitmap.GetPixel(i, j);
-            //    }
-            //}
-
-            //for (int i = 0; i < 280; i++)
-            //{
-            //    for (int j = 0; j < 280; j++)
-            //    {
-            //        newbitmap.SetPixel(i, j, ar[i, j]);
-            //    }
-            //}
-
-            //bitmap.SetResolution(320, 320);
-
-
-            var memory = new MemoryStream();
-            croppedImage.Save(memory, System.Drawing.Imaging.ImageFormat.Jpeg);
-            memory.Position = 0;
-
-            var bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.StreamSource = memory;
-            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-            bitmapImage.EndInit();
-            bitmapImage.Freeze();
+            double size = diameter / Zoom;
+            double zoomOffset = (diameter - diameter / Zoom) / 2;
+            double r = (diameter / 2) / Radius;
+            double translateX = (OriginalWidth - diameter) / 2 - LeftScaledOffset * r;
+            double translateY = (OriginalHeight - diameter) / 2 - TopScaledOffset * r;
             
-            Image = bitmapImage;
-            OriginalWidth = bitmapImage.Width;
-            OriginalHeight = bitmapImage.Height;
-
-            MessageBox.Show($"{OriginalWidth} {OriginalHeight}");
-
-            Calc();
+            double offsetX = translateX + zoomOffset;
+            double offsetY = translateY + zoomOffset;
+            
+            var croppedImage = CropBitmap(bitmap, new Rectangle((int)offsetX, (int)offsetY, (int)size, (int)size));
+            var resizedBitmap = ResizeBitmap(croppedImage, new System.Drawing.Size(280, 280));
+            
+            Image2 = BitmapToImage(resizedBitmap);
         }
     }
 }

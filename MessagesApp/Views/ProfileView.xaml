@@ -33,8 +33,8 @@
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0"
-                          Width="{Binding ContainerWidth}"
-                          Height="{Binding ContainerHeight}"
+                          Width="{Binding ContainerRect.Width}"
+                          Height="{Binding ContainerRect.Height}"
                           ClipToBounds="True"
                           Background="#eee"
                           Cursor="SizeAll">
@@ -52,8 +52,8 @@
                                         <TranslateTransform X="{Binding LeftScaledOffset}"
                                                             Y="{Binding TopScaledOffset}" />
                                         <ScaleTransform CenterX="{Binding LeftMaxOffset}"
-                                                        ScaleX="{Binding Zoom}"
                                                         CenterY="{Binding TopMaxOffset}"
+                                                        ScaleX="{Binding Zoom}"
                                                         ScaleY="{Binding Zoom}" />
                                     </TransformGroup>
                                 </Image.RenderTransform>
@@ -157,7 +157,7 @@
                     <Canvas Grid.Row="0"
                             ClipToBounds="True">
 
-                        <Image Source="{Binding Image}"
+                        <Image Source="{Binding Image2}"
                                Width="auto"
                                Height="auto"
                                Margin="72" />
